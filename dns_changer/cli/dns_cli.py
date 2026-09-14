@@ -1,6 +1,6 @@
 """
 Rich interactive CLI for DNS Changer.
-Talks only to DNSService — no WMI, no PyQt5, no OS calls here.
+Talks only to DNSService — no WMI, no GUI, no OS calls here.
 
 Usage
 -----
@@ -19,28 +19,28 @@ from rich.console import Console
 from rich.table import Table
 from rich.panel import Panel
 from rich.prompt import Prompt
-from rich.columns import Columns
 from rich import box
 from rich.text import Text
 from rich.live import Live
 from rich.spinner import Spinner
 from rich.align import Align
 
-from ..core import DNSService, ServiceError, State
-from ..core.providers import providers_by_category, Category, DNSProvider
+from ..core import DNSService, ServiceError
+from ..core.providers import providers_by_category, Category
 
 console = Console()
 
 # ── category styling ────────────────────────────────────────────────────────
 CATEGORY_STYLE: dict[Category, tuple[str, str]] = {
-    Category.ANTI_SANCTION: ("green",      "🔓"),
-    Category.ANTI_FILTER:   ("cyan",       "🚫"),
-    Category.GAMING:        ("magenta",    "🎮"),
-    Category.GENERAL:       ("yellow",     "🌐"),
+    Category.ANTI_SANCTION: ("green", "🔓"),
+    Category.ANTI_FILTER: ("cyan", "🚫"),
+    Category.GAMING: ("magenta", "🎮"),
+    Category.GENERAL: ("yellow", "🌐"),
 }
 
 
 # ── helpers ─────────────────────────────────────────────────────────────────
+
 
 def _style(cat: Category) -> tuple[str, str]:
     return CATEGORY_STYLE.get(cat, ("white", "•"))
@@ -64,15 +64,15 @@ def _active_panel(service: DNSService) -> Panel:
             f"[dim]Secondary:[/] [bold]{p.secondary}[/]\n\n"
             f"[dim]Current OS DNS:[/] {_dns_status_text(service)}"
         )
-        return Panel(content, title="[bold green]● DNS Status[/]",
-                     border_style="green", padding=(1, 2))
+        return Panel(
+            content, title="[bold green]● DNS Status[/]", border_style="green", padding=(1, 2)
+        )
     else:
         content = (
             f"[bold red]● No custom DNS active[/]\n\n"
             f"[dim]Current OS DNS:[/] {_dns_status_text(service)}"
         )
-        return Panel(content, title="[bold red]● DNS Status[/]",
-                     border_style="red", padding=(1, 2))
+        return Panel(content, title="[bold red]● DNS Status[/]", border_style="red", padding=(1, 2))
 
 
 def _providers_table() -> Table:
@@ -84,12 +84,12 @@ def _providers_table() -> Table:
         title_style="bold cyan",
         padding=(0, 1),
     )
-    table.add_column("#",          style="dim",          width=3,  justify="right")
-    table.add_column("Provider",   style="bold white",   width=14)
-    table.add_column("Category",   width=14)
-    table.add_column("Primary",    style="cyan",         width=17)
-    table.add_column("Secondary",  style="cyan",         width=17)
-    table.add_column("Description", style="dim",         min_width=20)
+    table.add_column("#", style="dim", width=3, justify="right")
+    table.add_column("Provider", style="bold white", width=14)
+    table.add_column("Category", width=14)
+    table.add_column("Primary", style="cyan", width=17)
+    table.add_column("Secondary", style="cyan", width=17)
+    table.add_column("Description", style="dim", min_width=20)
 
     idx = 1
     for category, providers in providers_by_category().items():
@@ -110,18 +110,8 @@ def _providers_table() -> Table:
     return table
 
 
-def _build_menu_items() -> list[tuple[str, DNSProvider]]:
-    """Flat ordered list of (display_index_str, provider) for interactive menu."""
-    items: list[tuple[str, DNSProvider]] = []
-    idx = 1
-    for providers in providers_by_category().values():
-        for p in providers:
-            items.append((str(idx), p))
-            idx += 1
-    return items
-
-
 # ── commands ────────────────────────────────────────────────────────────────
+
 
 def cmd_list(_service: DNSService) -> None:
     console.print()
@@ -137,25 +127,30 @@ def cmd_status(service: DNSService) -> None:
 
 def cmd_set(service: DNSService, provider_name: str) -> None:
     from ..core.providers import DNS_PROVIDERS
+
     # accept both key ("Shecan") and display name ("Radar Game")
     key = provider_name
     if key not in DNS_PROVIDERS:
         # try matching by display name
         key = next(
-            (k for k, p in DNS_PROVIDERS.items()
-             if p.name.lower() == provider_name.lower()),
+            (k for k, p in DNS_PROVIDERS.items() if p.name.lower() == provider_name.lower()),
             None,
         )
     if key is None:
-        console.print(f"\n[bold red]✗[/] Provider [yellow]{provider_name!r}[/] not found. "
-                      f"Run [cyan]list[/] to see available providers.\n")
+        console.print(
+            f"\n[bold red]✗[/] Provider [yellow]{provider_name!r}[/] not found. "
+            f"Run [cyan]list[/] to see available providers.\n"
+        )
         sys.exit(1)
 
     provider = DNS_PROVIDERS[key]
     color, icon = _style(provider.category)
 
-    with Live(Spinner("dots", text=f"  Setting DNS to [bold {color}]{provider.name}[/]…"),
-              console=console, refresh_per_second=12):
+    with Live(
+        Spinner("dots", text=f"  Setting DNS to [bold {color}]{provider.name}[/]…"),
+        console=console,
+        refresh_per_second=12,
+    ):
         try:
             service.activate(key)
         except ServiceError as e:
@@ -176,8 +171,11 @@ def cmd_reset(service: DNSService) -> None:
 
     provider_name = service.active_provider.name if service.active_provider else "custom DNS"
 
-    with Live(Spinner("dots", text=f"  Reverting from [yellow]{provider_name}[/] to DHCP…"),
-              console=console, refresh_per_second=12):
+    with Live(
+        Spinner("dots", text=f"  Reverting from [yellow]{provider_name}[/] to DHCP…"),
+        console=console,
+        refresh_per_second=12,
+    ):
         try:
             service.deactivate()
         except ServiceError as e:
@@ -189,16 +187,14 @@ def cmd_reset(service: DNSService) -> None:
 
 def cmd_interactive(service: DNSService) -> None:
     """Full interactive TUI loop."""
-    menu_items = _build_menu_items()
-
-    # build index → key map
+    # Menu numbers must match the table's category-ordered rows, so build the
+    # map from providers_by_category() (not raw dict order) via an id lookup.
+    key_by_id = {id(p): key for key, p in service.available_providers().items()}
     idx_to_key: dict[str, str] = {}
     i = 1
-    for providers in providers_by_category().values():
-        for p in providers:
-            idx_to_key[str(i)] = next(
-                k for k, v in service.available_providers().items() if v is p
-            )
+    for provs in providers_by_category().values():
+        for p in provs:
+            idx_to_key[str(i)] = key_by_id[id(p)]
             i += 1
 
     while True:
@@ -241,6 +237,7 @@ def cmd_interactive(service: DNSService) -> None:
 
 # ── entry point ─────────────────────────────────────────────────────────────
 
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="dns-changer",
@@ -248,9 +245,9 @@ def build_parser() -> argparse.ArgumentParser:
     )
     sub = parser.add_subparsers(dest="command")
 
-    sub.add_parser("list",   help="List all available DNS providers")
+    sub.add_parser("list", help="List all available DNS providers")
     sub.add_parser("status", help="Show current DNS status")
-    sub.add_parser("reset",  help="Revert DNS to Automatic (DHCP)")
+    sub.add_parser("reset", help="Revert DNS to Automatic (DHCP)")
 
     p_set = sub.add_parser("set", help="Activate a DNS provider")
     p_set.add_argument("provider", help="Provider name or key (e.g. Shecan, Electro)")
@@ -260,17 +257,18 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main() -> None:
     from ..utils.privileges import ensure_admin
+
     ensure_admin()
 
     service = DNSService()
-    parser  = build_parser()
-    args    = parser.parse_args()
+    parser = build_parser()
+    args = parser.parse_args()
 
     dispatch = {
-        "list":   lambda: cmd_list(service),
+        "list": lambda: cmd_list(service),
         "status": lambda: cmd_status(service),
-        "reset":  lambda: cmd_reset(service),
-        "set":    lambda: cmd_set(service, args.provider),
+        "reset": lambda: cmd_reset(service),
+        "set": lambda: cmd_set(service, args.provider),
     }
 
     if args.command in dispatch:

@@ -1,6 +1,6 @@
 [build-system]
 requires      = ["setuptools>=68", "wheel"]
-build-backend = "setuptools.backends.legacy:build"
+build-backend = "setuptools.build_meta"
 
 # ── project metadata (PEP 621) ──────────────────────────────────────────────
 [project]
@@ -34,18 +34,15 @@ classifiers = [
 ]
 
 dependencies = [
-  "PyQt5>=5.15",
   "WMI>=1.5",
   "rich>=13.0",
 ]
 
 # ── optional dependency groups ──────────────────────────────────────────────
 [project.optional-dependencies]
-gui = ["PyQt5>=5.15"]
 cli = ["rich>=13.0"]
 dev = [
   "pytest>=8.0",
-  "pytest-qt>=4.0",
   "ruff>=0.4",
   "mypy>=1.10",
 ]

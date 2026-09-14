@@ -15,10 +15,10 @@ from enum import Enum
 
 
 class Category(str, Enum):
-    ANTI_SANCTION = "رفع تحریم"    # unblocks sites that geo-block Iran
-    ANTI_FILTER   = "رفع فیلتر"    # bypasses Iran's internal filtering
-    GAMING        = "گیمینگ"        # low-ping + unblocked game servers
-    GENERAL       = "عمومی"         # speed / privacy / reliability
+    ANTI_SANCTION = "رفع تحریم"  # unblocks sites that geo-block Iran
+    ANTI_FILTER = "رفع فیلتر"  # bypasses Iran's internal filtering
+    GAMING = "گیمینگ"  # low-ping + unblocked game servers
+    GENERAL = "عمومی"  # speed / privacy / reliability
 
 
 @dataclass(frozen=True)
@@ -41,7 +41,6 @@ class DNSProvider:
 # تمام providerهایی که برای کاربران ایرانی کاربرد دارند
 # ---------------------------------------------------------------------------
 DNS_PROVIDERS: dict[str, DNSProvider] = {
-
     # ── رفع تحریم (Anti-Sanction) ──────────────────────────────────────────
     "Shecan": DNSProvider(
         name="Shecan",
@@ -52,8 +51,8 @@ DNS_PROVIDERS: dict[str, DNSProvider] = {
     ),
     "Begzar": DNSProvider(
         name="Begzar",
-        primary="185.55.226.26",
-        secondary="185.55.225.25",
+        primary="185.55.224.24",
+        secondary="185.55.226.26",
         category=Category.ANTI_SANCTION,
         description="begzar.ir — جایگزین شکن با پوشش وسیع",
     ),
@@ -66,29 +65,15 @@ DNS_PROVIDERS: dict[str, DNSProvider] = {
     ),
     "HostIran": DNSProvider(
         name="HostIran",
-        primary="172.29.0.100",
-        secondary="172.29.2.100",
+        primary="37.27.81.177",
+        secondary="5.144.130.130",
         category=Category.ANTI_SANCTION,
         description="hostiran.net — DNS داخلی با قابلیت رفع تحریم",
     ),
-
-    # ── رفع فیلتر (Anti-Filter) ────────────────────────────────────────────
-    "403": DNSProvider(
-        name="403",
-        primary="10.202.10.202",
-        secondary="10.202.10.102",
-        category=Category.ANTI_FILTER,
-        description="403.online — سرویس وزارت ICT برای رفع خطای 403",
-    ),
-
     # ── گیمینگ (Gaming) ────────────────────────────────────────────────────
-    "RadarGame": DNSProvider(
-        name="Radar Game",
-        primary="10.202.10.10",
-        secondary="10.202.10.11",
-        category=Category.GAMING,
-        description="radar.game — بهینه برای بازی‌های آنلاین و کاهش پینگ",
-    ),
+    # NB: 403 (10.202.10.202/.102) و Radar Game (10.202.10.10/.11) از IP
+    # خصوصی (RFC1918) استفاده می‌کردند که به‌عنوان DNS عمومی کار نمی‌کند؛
+    # تا زمانی که IP عمومی واقعی‌شان تأیید نشود حذف شدند.
     "AsiaTech": DNSProvider(
         name="AsiaTech",
         primary="185.98.113.113",
@@ -96,7 +81,6 @@ DNS_PROVIDERS: dict[str, DNSProvider] = {
         category=Category.GAMING,
         description="asiatech.ir — مناسب گیمینگ و استفاده عمومی",
     ),
-
     # ── عمومی (General) ────────────────────────────────────────────────────
     "Cloudflare": DNSProvider(
         name="Cloudflare",
@@ -119,6 +103,13 @@ DNS_PROVIDERS: dict[str, DNSProvider] = {
         category=Category.GENERAL,
         description="quad9.net — DNS با محافظت در برابر بدافزار",
     ),
+    "DNS Pro": DNSProvider(
+        name="DNS Pro",
+        primary="87.107.110.109",
+        secondary="87.107.110.110",
+        category=Category.GENERAL,
+        description="dnspro.ir — DNS عمومی داخلی (recursive1/2.dnspro.ir)",
+    ),
 }
 
 
@@ -128,4 +119,3 @@ def providers_by_category() -> dict[Category, list[DNSProvider]]:
     for p in DNS_PROVIDERS.values():
         result[p.category].append(p)
     return result
-

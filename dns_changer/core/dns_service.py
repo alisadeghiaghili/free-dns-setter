@@ -16,21 +16,17 @@ class ServiceError(Exception):
 
 
 class State(Enum):
-    IDLE    = auto()   # no custom DNS active
-    ACTIVE  = auto()   # custom DNS is applied
+    IDLE = auto()  # no custom DNS active
+    ACTIVE = auto()  # custom DNS is applied
 
 
 @dataclass
 class DNSService:
-    _state: State          = field(default=State.IDLE,  init=False, repr=False)
-    _snapshot: list[str]   = field(default_factory=list, init=False, repr=False)
+    _state: State = field(default=State.IDLE, init=False, repr=False)
+    _snapshot: list[str] = field(default_factory=list, init=False, repr=False)
     _provider: DNSProvider | None = field(default=None, init=False, repr=False)
 
     # ---------------------------------------------------------------- queries
-
-    @property
-    def state(self) -> State:
-        return self._state
 
     @property
     def active_provider(self) -> DNSProvider | None:
@@ -63,24 +59,17 @@ class DNSService:
         if not set_dns(provider.servers):
             self._snapshot = []
             raise ServiceError(
-                "تغییر DNS با خطا مواجه شد.\n"
-                "مطمئن شوید برنامه با دسترسی Administrator اجرا شده."
+                "تغییر DNS با خطا مواجه شد.\nمطمئن شوید برنامه با دسترسی Administrator اجرا شده."
             )
 
         self._provider = provider
-        self._state    = State.ACTIVE
+        self._state = State.ACTIVE
 
     def deactivate(self) -> None:
         """Revert to the DNS that was active before the last activate()."""
         if not set_dns(self._snapshot):
             raise ServiceError("بازگردانی DNS با خطا مواجه شد.")
 
-        self._provider  = None
-        self._snapshot  = []
-        self._state     = State.IDLE
-
-    def switch(self, provider_name: str) -> None:
-        """Deactivate current provider (if any) then activate the new one."""
-        if self.is_active:
-            self.deactivate()
-        self.activate(provider_name)
+        self._provider = None
+        self._snapshot = []
+        self._state = State.IDLE

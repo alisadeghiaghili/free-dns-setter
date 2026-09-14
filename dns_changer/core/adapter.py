@@ -14,7 +14,8 @@ def _wmi_adapters() -> list:
     """Return all IP-enabled Wireless/Ethernet adapters."""
     c = wmi.WMI()
     return [
-        a for a in c.Win32_NetworkAdapterConfiguration(IPEnabled=True)
+        a
+        for a in c.Win32_NetworkAdapterConfiguration(IPEnabled=True)
         if a.Description and any(kw in a.Description for kw in _ADAPTER_KEYWORDS)
     ]
 
