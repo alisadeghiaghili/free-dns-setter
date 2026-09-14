@@ -3,8 +3,10 @@
 
 # ── documentation ───────────────────────────────────────────────────────────
 include README.md
+include README.en.md
 include CHANGELOG.md
 include LICENSE
+recursive-include docs *.png
 
 # ── package data ────────────────────────────────────────────────────────────
 recursive-include dns_changer *.py
