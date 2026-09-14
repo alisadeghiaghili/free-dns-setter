@@ -20,3 +20,4 @@ env/
 # OS
 Thumbs.db
 .DS_Store
+*.spec
