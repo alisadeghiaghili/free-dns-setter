@@ -16,7 +16,7 @@
 
 ## درباره توسعه‌دهنده
 
-**نام:** علی صادقی آقیلی
+**نام:** علی صادقی عقیلی
 **گیت‌هاب:** [github.com/alisadeghiaghili](https://github.com/alisadeghiaghili)
 **ایمیل:** [alisadeghiaghili@gmail.com](mailto:alisadeghiaghili@gmail.com)
 
