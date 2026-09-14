@@ -6,6 +6,48 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [2.1.0] — 2026-09-14
+
+### Added
+- **Tkinter GUI** — clean, right-to-left (RTL) desktop window built on the
+  standard library; no external GUI dependency. Custom right-aligned dropdown
+  (a right-aligned Entry + Listbox popup) because `ttk.Combobox` cannot render
+  Persian text right-to-left on Windows
+- **DNS Pro** (`87.107.110.109` / `87.107.110.110`) — internal general-purpose
+  resolver, verified public (PTR `recursive1/2.dnspro.ir`)
+
+### Changed
+- **Removed PyQt5** — the only external GUI dependency is gone; Tkinter is
+  in the standard library. GUI install is now just `pip install wmi`
+- **Removed `403` and `Radar Game`** providers — they were configured with
+  private RFC1918 addresses (`10.x`) that cannot work as a public resolver
+- **Corrected provider IPs** — `Begzar` → `185.55.224.24`/`185.55.226.26`,
+  `HostIran` → `37.27.81.177`/`5.144.130.130` (previously private ranges);
+  every remaining IP verified public via PTR / public resolution
+- **Repos rebranded** — `ShecanDNSSetter` → `free-dns-setter` to reflect that
+  the app now manages many providers, not just Shecan
+- `pyproject.toml` — `build-backend` fixed to `setuptools.build_meta`,
+  `readme` points to the real `README.md`, repo URLs updated
+
+### Fixed
+- **Package layout** — modules moved into a real `dns_changer/` package
+  (`core` / `ui` / `cli` / `utils`) with `__init__.py` files. The code
+  previously referenced this layout in its imports and entry points while
+  the files sat flat at the repo root, so nothing could import, install, or
+  run
+- **Relative imports** in `main.py` (`from core import ...` → `from .core ...`)
+- **UAC re-launch** — elevation now re-runs `python -m <entry>` with the
+  working directory pinned to the project root; the old code re-ran the entry
+  file directly, which broke package-relative imports in the elevated process
+- **CLI menu numbering** — menu numbers now follow the same category order as
+  the providers table (previously they silently depended on dict insertion
+  order matching category order)
+- Removed dead code: `DNSService.switch()`, the `state` property, unused
+  imports (`Columns`, `DNSProvider` in CLI, `State` in UI)
+- Added `.gitignore`
+
+---
+
 ## [2.0.0] — 2026-06-22
 
 ### Added

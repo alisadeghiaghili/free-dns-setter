@@ -1,4 +1,4 @@
-# 🌐 DNS Changer
+# 🌐 Free DNS Setter
 
 > A Windows DNS manager for Iranian users — GUI + CLI, built with Python.
 
@@ -22,36 +22,40 @@
 
 ## Overview
 
-DNS Changer is a Windows desktop application that lets you switch between DNS providers with a single click or command. It supports 10 providers across four categories — anti-sanction, anti-filter, gaming, and general-purpose — and ships both a PyQt5 GUI and a Rich-powered interactive CLI.
+Free DNS Setter is a Windows desktop application that lets you switch between DNS providers with a single click or command. It supports 9 active providers across three categories — anti-sanction, gaming, and general-purpose — and ships both a **Tkinter** GUI (right-to-left) and a Rich-powered interactive CLI. The GUI is built on the Python standard library, so it needs no external GUI dependency.
 
 ---
 
 ## Features
 
-- **10 pre-configured DNS providers** across four categories
-- **GUI** — PyQt5 interface with categorised dropdown and per-provider descriptions
+- **9 pre-configured DNS providers** across three active categories
+- **GUI** — Tkinter window with a right-aligned (RTL) dropdown and per-provider descriptions; no external GUI dependency
 - **CLI** — interactive TUI menu *and* non-interactive one-shot commands
 - Automatic **DNS snapshot** before any change — safe rollback to DHCP
 - **UAC elevation** — auto-relaunches with admin privileges if needed
 - WMI return-code checking — surfaces real errors instead of silent failures
+- Every internal provider IP is a **verified public address** (via PTR / public resolution)
 - Layered architecture (core / ui / cli / utils) — each layer independently testable
 
 ---
 
 ## DNS Providers
 
-| Provider    | Category      | Primary          | Secondary         |
-|-------------|---------------|------------------|-------------------|
-| Shecan      | Anti-Sanction | 178.22.122.100   | 185.51.200.2      |
-| Begzar      | Anti-Sanction | 185.55.226.26    | 185.55.225.25     |
-| Electro     | Anti-Sanction | 78.157.42.100    | 78.157.42.101     |
-| HostIran    | Anti-Sanction | 172.29.0.100     | 172.29.2.100      |
-| 403         | Anti-Filter   | 10.202.10.202    | 10.202.10.102     |
-| Radar Game  | Gaming        | 10.202.10.10     | 10.202.10.11      |
-| AsiaTech    | Gaming        | 185.98.113.113   | 185.98.114.114    |
-| Cloudflare  | General       | 1.1.1.1          | 1.0.0.1           |
-| Google      | General       | 8.8.8.8          | 8.8.4.4           |
-| Quad9       | General       | 9.9.9.9          | 149.112.112.112   |
+| Provider   | Category      | Primary          | Secondary         |
+|------------|---------------|------------------|-------------------|
+| Shecan     | Anti-Sanction | 178.22.122.100   | 185.51.200.2      |
+| Begzar     | Anti-Sanction | 185.55.224.24    | 185.55.226.26     |
+| Electro    | Anti-Sanction | 78.157.42.100    | 78.157.42.101     |
+| HostIran   | Anti-Sanction | 37.27.81.177     | 5.144.130.130     |
+| AsiaTech   | Gaming        | 185.98.113.113   | 185.98.114.114    |
+| Cloudflare | General       | 1.1.1.1          | 1.0.0.1           |
+| Google     | General       | 8.8.8.8          | 8.8.4.4           |
+| Quad9      | General       | 9.9.9.9          | 149.112.112.112   |
+| DNS Pro    | General       | 87.107.110.109   | 87.107.110.110    |
+
+> The "Anti-Filter" category has no verified public provider right now
+> (`403` used a private address and could not work). It will be added as soon
+> as a valid public IP is confirmed.
 
 ---
 
@@ -62,8 +66,9 @@ DNS Changer is a Windows desktop application that lets you switch between DNS pr
 - Administrator privileges
 
 ```bash
-pip install PyQt5 rich
+pip install wmi rich
 ```
+(The GUI only needs `wmi`; `rich` is for the CLI. `Tkinter` ships with Python.)
 
 ---
 
@@ -75,10 +80,7 @@ pip install PyQt5 rich
 python -m dns_changer.main
 ```
 
-Or download the pre-built executable:
-[Download DNS Changer (.exe)](https://github.com/alisadeghiaghili/ShecanDNSSetter/releases/download/pre-release/dnsSetter.exe)
-
-> **Must be run as Administrator.**
+> **Must be run as Administrator.** It re-launches itself with elevation via UAC if not.
 
 ### CLI
 
@@ -101,11 +103,11 @@ python -m dns_changer.cli.dns_cli reset            # revert to DHCP
 dns_changer/
 ├── main.py                  # GUI entry point
 ├── core/
-│   ├── providers.py         # DNSProvider dataclass + registry
+│   ├── providers.py         # DNSProvider dataclass + registry (edit here only)
 │   ├── adapter.py           # WMI calls (isolated here only)
 │   └── dns_service.py       # business logic + state machine
 ├── ui/
-│   └── main_window.py       # PyQt5 window
+│   └── main_window.py       # Tkinter window (RTL)
 ├── cli/
 │   └── dns_cli.py           # Rich CLI (interactive + one-shot)
 └── utils/
@@ -116,7 +118,7 @@ dns_changer/
 
 ## How to Contribute
 
-1. Fork the repository from [github.com/alisadeghiaghili/ShecanDNSSetter](https://github.com/alisadeghiaghili/ShecanDNSSetter)
+1. Fork the repository from [github.com/alisadeghiaghili/free-dns-setter](https://github.com/alisadeghiaghili/free-dns-setter)
 2. Create a new branch for your changes
 3. Commit with descriptive messages following [Conventional Commits](https://www.conventionalcommits.org/)
 4. Push and open a pull request

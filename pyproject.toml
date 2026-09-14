@@ -5,8 +5,8 @@ build-backend = "setuptools.build_meta"
 # ── project metadata (PEP 621) ──────────────────────────────────────────────
 [project]
 name            = "dns-changer"
-version         = "2.0.0"
-description     = "Windows DNS manager for Iranian users — GUI + CLI"
+version         = "2.1.0"
+description     = "Windows DNS manager for Iranian users — one-click DNS switching (GUI + CLI) with verified anti-sanction, anti-filter, gaming, and general resolvers"
 readme          = "README.md"
 license         = { text = "Apache-2.0" }
 requires-python = ">=3.11"
@@ -54,10 +54,10 @@ dns-changer-cli = "dns_changer.cli:main"
 
 # ── project URLs ─────────────────────────────────────────────────────────────
 [project.urls]
-Homepage   = "https://github.com/alisadeghiaghili/ShecanDNSSetter"
-Repository = "https://github.com/alisadeghiaghili/ShecanDNSSetter"
-Changelog  = "https://github.com/alisadeghiaghili/ShecanDNSSetter/blob/main/CHANGELOG.md"
-Issues     = "https://github.com/alisadeghiaghili/ShecanDNSSetter/issues"
+Homepage   = "https://github.com/alisadeghiaghili/free-dns-setter"
+Repository = "https://github.com/alisadeghiaghili/free-dns-setter"
+Changelog  = "https://github.com/alisadeghiaghili/free-dns-setter/blob/main/CHANGELOG.md"
+Issues     = "https://github.com/alisadeghiaghili/free-dns-setter/issues"
 
 # ── tool config ──────────────────────────────────────────────────────────────
 [tool.setuptools.packages.find]
