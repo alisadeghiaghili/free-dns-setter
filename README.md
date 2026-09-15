@@ -13,7 +13,7 @@
   <a href="LICENSE"><img alt="License" src="https://img.shields.io/badge/License-Apache%202.0-blue.svg"></a>
   <a href="https://www.python.org/"><img alt="Python" src="https://img.shields.io/badge/Python-3.11%2B-blue"></a>
   <img alt="Platform" src="https://img.shields.io/badge/Platform-Windows%20%C2%B7%20Linux%20(Ubuntu)%20%C2%B7%20macOS-lightgrey">
-  <a href="https://github.com/alisadeghiaghili/free-dns-setter/releases"><img alt="Release" src="https://img.shields.io/badge/Release-v2.1.0-brightgreen"></a>
+  <a href="https://github.com/alisadeghiaghili/free-dns-setter/releases"><img alt="Release" src="https://img.shields.io/badge/Release-v2.2.0-brightgreen"></a>
 </p>
 
 <br>

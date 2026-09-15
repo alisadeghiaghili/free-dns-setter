@@ -1,0 +1,78 @@
+name: release
+
+# Build a PyInstaller binary for each OS from a version tag and publish them
+# to a GitHub Release. A PyInstaller bundle is only buildable on its own OS,
+# so we run one job per runner:
+#   Windows -> .exe        Linux -> onefile ELF binary     macOS -> .app (zipped)
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            file: free-dns-setter-windows-x64.exe
+          - os: ubuntu-latest
+            file: free-dns-setter-linux-x86_64
+          - os: macos-latest
+            file: free-dns-setter-darwin-x86_64.zip
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Verify Tkinter is available (needed for the GUI build)
+        shell: bash
+        run: python -c "import tkinter; print('tkinter', tkinter.TkVersion)"
+
+      - name: Install PyInstaller
+        shell: bash
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyinstaller
+
+      - name: Build (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: pyinstaller --onefile --windowed --uac-admin --name free-dns-setter --hidden-import wmi build_exe.py
+
+      - name: Build (Linux)
+        if: runner.os == 'Linux'
+        shell: bash
+        run: pyinstaller --onefile --windowed --name free-dns-setter build_exe.py
+
+      - name: Build (macOS)
+        if: runner.os == 'macOS'
+        shell: bash
+        run: pyinstaller --windowed --name "free-dns-setter" build_exe.py
+
+      - name: Stage artifact
+        shell: bash
+        run: |
+          case "$RUNNER_OS" in
+            Windows) cp dist/free-dns-setter.exe "dist/${{ matrix.file }}" ;;
+            Linux)   cp dist/free-dns-setter "dist/${{ matrix.file }}" ;;
+            macOS)   ( cd dist && zip -qry "../${{ matrix.file }}" free-dns-setter.app ) ;;
+          esac
+          ls -la dist
+
+      - name: Publish to release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          draft: false
+          prerelease: false
+          files: dist/${{ matrix.file }}

@@ -8,6 +8,10 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+---
+
+## [2.2.0] — 2026-09-15
+
 ### Added
 - **Linux (Ubuntu/Debian) support** — DNS managed through NetworkManager
   (`nmcli`): read from the active connection, set via `ipv4.dns`/`ipv4.method`.

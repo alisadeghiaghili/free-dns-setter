@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 # ── project metadata (PEP 621) ──────────────────────────────────────────────
 [project]
 name            = "dns-changer"
-version         = "2.1.0"
+version         = "2.2.0"
 description     = "Cross-platform DNS manager for Iranian users — one-click DNS switching (GUI + CLI) on Windows, Linux (Ubuntu/Debian), and macOS, with verified anti-sanction, anti-filter, gaming, and general resolvers"
 readme          = "README.md"
 license         = { text = "Apache-2.0" }
