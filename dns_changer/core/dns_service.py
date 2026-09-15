@@ -67,6 +67,9 @@ class DNSService:
 
     def deactivate(self) -> None:
         """Revert to the DNS that was active before the last activate()."""
+        if self._state is not State.ACTIVE:
+            raise ServiceError("هیچ DNS سفارشی فعال نیست.")
+
         if not set_dns(self._snapshot):
             raise ServiceError("بازگردانی DNS با خطا مواجه شد.")
 

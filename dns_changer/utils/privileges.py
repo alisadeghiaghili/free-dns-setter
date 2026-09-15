@@ -123,7 +123,8 @@ def relaunch_as_admin() -> None:
     """Re-launch the current program elevated, then exit."""
     if _IS_WIN:
         _win_relaunch()
-    _unix_relaunch()
+    else:
+        _unix_relaunch()
 
 
 def ensure_admin() -> None:

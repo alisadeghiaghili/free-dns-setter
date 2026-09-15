@@ -8,6 +8,22 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+- **Test suite (TDD)** — 142 tests across `providers`, `dns_service`,
+  `adapter` (all three OS backends, exercised via mocked `wmi`/`subprocess`),
+  `privileges`, the rich `cli`, the Tkinter `ui`, and the `main` entry.
+  Coverage is measured over the whole package and gated at **95%**
+  (`pytest --cov-fail-under`); the suite currently sits at **~99%**.
+- **`pytest-cov`** added to the `dev` extras.
+
+### Fixed
+- **`deactivate()` while idle** — previously called `set_dns([])` even when no
+  provider was active, which could wipe the OS DNS; now it raises a
+  `ServiceError` and leaves the system untouched.
+- **Windows elevation fall-through** — `relaunch_as_admin()` fell through to
+  the Unix `sudo` re-launch on Windows after the UAC branch (which exits); the
+  Unix branch is now an `else`, so it only runs on Linux/macOS.
+
 ---
 
 ## [2.2.0] — 2026-09-15
