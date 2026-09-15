@@ -22,7 +22,7 @@ jobs:
           - os: ubuntu-latest
             file: free-dns-setter-linux-x86_64
           - os: macos-latest
-            file: free-dns-setter-darwin-x86_64.zip
+            file: free-dns-setter-darwin-arm64.zip
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -65,7 +65,7 @@ jobs:
           case "$RUNNER_OS" in
             Windows) cp dist/free-dns-setter.exe "dist/${{ matrix.file }}" ;;
             Linux)   cp dist/free-dns-setter "dist/${{ matrix.file }}" ;;
-            macOS)   ( cd dist && zip -qry "../${{ matrix.file }}" free-dns-setter.app ) ;;
+            macOS)   zip -qry "dist/${{ matrix.file }}" dist/free-dns-setter.app ;;
           esac
           ls -la dist
 
