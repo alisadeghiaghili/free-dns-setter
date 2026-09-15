@@ -6,13 +6,13 @@
 
 <p align="center">
   <strong>🌐 Free DNS Setter</strong><br>
-  <sub>تغییر DNS ویندوز با یک کلیک یا یک دستور — برای کاربران ایرانی</sub>
+  <sub>تغییر DNS سیستم با یک کلیک یا یک دستور — برای کاربران ایرانی</sub>
 </p>
 
 <p align="center">
   <a href="LICENSE"><img alt="License" src="https://img.shields.io/badge/License-Apache%202.0-blue.svg"></a>
   <a href="https://www.python.org/"><img alt="Python" src="https://img.shields.io/badge/Python-3.11%2B-blue"></a>
-  <img alt="Platform" src="https://img.shields.io/badge/Platform-Windows-lightgrey">
+  <img alt="Platform" src="https://img.shields.io/badge/Platform-Windows%20%C2%B7%20Linux%20(Ubuntu)%20%C2%B7%20macOS-lightgrey">
   <a href="https://github.com/alisadeghiaghili/free-dns-setter/releases"><img alt="Release" src="https://img.shields.io/badge/Release-v2.1.0-brightgreen"></a>
 </p>
 
@@ -28,18 +28,20 @@
 
 در ایران گاهی نیاز است DNS سیستم را عوض کنیم: برای دسترسی به سرویس‌هایی که
 محدود شده‌اند، کاهش پینگ در بازی‌ها، یا صرفاً داشتن رزولور سریع و پایدار.
-این ابزار آن کار را به یک کلیک (یا یک خط در ترمینال) تبدیل می‌کند — بدون
-نصب Python، و بدون دست زدن به تنظیمات شبکه.
+این ابزار آن کار را به یک کلیک (یا یک خط در ترمینال) تبدیل می‌کند — و روی
+**ویندوز، لینوکس (اوبونتو/دِبین) و مک** کار می‌کند؛ بدون دست زدن دستی به
+تنظیمات شبکه.
 
 ## ویژگی‌ها
 
 - ⚡ **یک کلیک** — رابط گرافیکی سادهٔ راست‌چین؛ یا یک خط در ترمینال
 - 🖥️ **بدون وابستگی گرافیکی** — رابط با Tkinter (همراه Python) ساخته شده؛ نیازی به نصب PyQt/PySide نیست
+- 🐧🍎🪟 **چندپلتفرمی** — ویندوز (WMI)، لینوکس/اوبونتو (NetworkManager) و مک (`networksetup`)
 - 📦 **نسخهٔ آمادهٔ ویندوز** — `free-dns-setter.exe` تک‌فایل، بدون Python
 - 🔄 **بازگشت ایمن** — قبل از هر تغییر، DNS فعلی ذخیره می‌شود؛ با `Deactivate`/`reset` به حالت پیشین برمی‌گردید
-- 🔐 **اجرا با دسترسی ادمین** — خودکار از طریق UAC دسترسی می‌گیرد
+- 🔐 **اجرا با دسترسی ادمین** — خودکار؛ در ویندوز از طریق UAC و در لینوکس/مک از طریق `sudo`
 - 🧩 **۹ سرویس‌دهندهٔ آماده** در سه دسته، با IPهای **تأییدشدهٔ عمومی**
-- 🩹 **اشکال‌یابی واقعی** — کد بازگشتی WMI چک می‌شود و خطا نمایش داده می‌شود (نه شکست بی‌صدا)
+- 🩹 **اشکال‌یابی واقعی** — کد بازگشتی سیستم‌عامل چک می‌شود و خطا نمایش داده می‌شود (نه شکست بی‌صدا)
 
 ## دسته‌ها
 
@@ -78,16 +80,32 @@
 
 > نیازی به نصب Python یا هیچ چیز دیگری نیست.
 
-### روش ۲ — از سورس (برای توسعه / اسکریپت‌نویسی)
+### روش ۲ — از سورس (لینوکس، مک و ویندوز)
 
-پیش‌نیاز: **ویندوز ۱۰/۱۱**، **Python 3.11+**، و دسترسی ادمین.
+پیش‌نیاز: **Python 3.11+** و دسترسی ادمین (برنامه در اجرای اول از طریق
+`sudo`/UAC درخواست می‌کند). رابط گرافیکی در همهٔ سیستم‌عامل‌ها همان پنجرهٔ
+Tkinter است.
 
+**ویندوز ۱۰/۱۱**
 ```bash
 pip install wmi rich
 ```
+**لینوکس (اوبونتو/دِبین)**
+```bash
+sudo apt update && sudo apt install -y network-manager python3-tk
+pip install rich
+```
+> NetworkManager (`nmcli`) در اوبونتو از قبل نصب است؛ خط بالا فقط برای
+> اطمینان است. `python3-tk` بک‌اندِ Tkinter را فراهم می‌کند.
 
-**رابط گرافیکی:**
+**مک (macOS)**
+```bash
+brew install python-tk      # اگر Tkinter وجود نداشت
+pip install rich
+```
+> `networksetup` به‌صورت پیش‌فرض در مک هست؛ برای رابط گرافیکی به Tkinter نیاز دارید.
 
+**اجرای رابط گرافیکی:**
 ```bash
 python -m dns_changer.main
 ```
@@ -96,7 +114,7 @@ python -m dns_changer.main
   <img src="docs/dropdown.png" width="300" alt="دراپ‌داونِ راست‌چینِ دسته‌بندی‌شده" />
 </p>
 
-**خط فرمان (CLI):**
+**خط فرمان (CLI) — در همهٔ سیستم‌عامل‌ها:**
 ```bash
 # منوی تعاملی
 python -m dns_changer.cli.dns_cli
@@ -105,16 +123,17 @@ python -m dns_changer.cli.dns_cli
 python -m dns_changer.cli.dns_cli list              # فهرست همهٔ سرویس‌دهنده‌ها
 python -m dns_changer.cli.dns_cli status            # وضعیت فعلی DNS
 python -m dns_changer.cli.dns_cli set Shecan        # فعال‌کردن یک سرویس‌دهنده
-python -m dns_changer.cli.dns_cli reset             # بازگشت به حالت پیشین (DHCP)
+python -m dns_changer.cli.dns_cli reset             # بازگشت به حالت خودکار
 ```
 
 ## عیب‌یابی
 
 | مشکل | راه‌حل |
 |------|--------|
-| پیام «تغییر DNS با خطا مواجه شد» | برنامه باید با دسترسی ادمین اجرا شود. از طریق UAC دوباره اجرا می‌شود؛ در صورت عدم کارکردن، روی exe راست‌کلیک → *Run as administrator* کنید. |
+| پیام «تغییر DNS با خطا مواجه شد» | برنامه به دسترسی ادمین نیاز دارد. خودکار دوباره اجرا می‌شود (در ویندوز UAC، در لینوکس/مک `sudo`)؛ اگر بلاک شد، دستی اجرا کنید: `sudo python -m dns_changer.main` (لینوکس/مک) یا *Run as administrator* (ویندوز). |
+| `nmcli not found` (لینوکس) | NetworkManager نصب نیست. `sudo apt install network-manager` (اوبونتو/دِبین) یا معادلِ توزیع خود را نصب کنید. |
 | آنتی‌ویروس exe را خنثی کرد | نرم‌افزارهای تک‌فایلِ PyInstaller گاهی توسط آنتی‌ویروس‌ها علامت‌گذاری می‌شوند. از سورس (`pip install` و `python -m`) اجرا کنید یا exe را سفید‌فهرست کنید. |
-| DNS بعد از ری‌استارت برنگشت | تنظیمات DNS روی اداپتورهای IP‌دار اعمال می‌شوند. اگر DHCP مجدد روی آن‌ها فعال شود، تغییر بازنمی‌ماند. |
+| DNS بعد از ری‌استارت برنگشت | تغییر روی اتصال شبکهٔ فعال اعمال می‌شود. NetworkManager (لینوکس) یا DHCP (ویندوز) ممکن است هنگام اتصال مجدد آن را بازنشاند — پس از تغییر شبکه دوباره اجرا کنید. |
 
 ## معماری
 
@@ -123,20 +142,21 @@ python -m dns_changer.cli.dns_cli reset             # بازگشت به حالت
 ```
 dns_changer/
 ├── main.py                  # نقطهٔ ورود GUI
-├── core/                    # منطق — بدون وابستگی به UI یا OS
+├── core/                    # منطق — بدون ایمپورت زودهنگامِ OS
 │   ├── providers.py         # تعریف سرویس‌دهنده‌ها (برای افزودن، فقط اینجا)
-│   ├── adapter.py           # تنها فایلی که با WMI کار می‌کند
+│   ├── adapter.py           # تنها درزِ OS — WMI / nmcli / networksetup
 │   └── dns_service.py       # state machine + اسنپ‌شات DNS
 ├── ui/
 │   └── main_window.py       # رابط Tkinter (راست‌چین)
 ├── cli/
 │   └── dns_cli.py           # CLI تعاملی + دستورات مستقل (rich)
 └── utils/
-    └── privileges.py        # مدیریت دسترسی ادمین (UAC)
+    └── privileges.py        # ارتفای — UAC (ویندوز) / sudo (لینوکس، مک)
 ```
 
 **افزودن سرویس‌دهندهٔ جدید:** فقط یک entry به `core/providers.py` اضافه کنید —
-هیچ فایل دیگری تغییر نمی‌کند.
+هیچ فایل دیگری تغییر نمی‌کند. **افزودن سیستم‌عامل جدید:** یک بک‌اند به
+`core/adapter.py` و یک شاخه به `utils/privileges.py`.
 
 ## مشارکت
 

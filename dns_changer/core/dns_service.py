@@ -59,7 +59,7 @@ class DNSService:
         if not set_dns(provider.servers):
             self._snapshot = []
             raise ServiceError(
-                "تغییر DNS با خطا مواجه شد.\nمطمئن شوید برنامه با دسترسی Administrator اجرا شده."
+                "تغییر DNS با خطا مواجه شد.\nمطمئن شوید برنامه با دسترسی ادمین اجرا شده."
             )
 
         self._provider = provider

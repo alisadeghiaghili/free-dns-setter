@@ -49,7 +49,7 @@ def _style(cat: Category) -> tuple[str, str]:
 def _dns_status_text(service: DNSService) -> Text:
     servers = service.current_dns()
     if not servers:
-        return Text("Automatic (DHCP)", style="dim")
+        return Text("Automatic", style="dim")
     return Text(", ".join(servers), style="bold white")
 
 
@@ -166,13 +166,13 @@ def cmd_set(service: DNSService, provider_name: str) -> None:
 
 def cmd_reset(service: DNSService) -> None:
     if not service.is_active:
-        console.print("\n[dim]DNS is already on Automatic (DHCP). Nothing to do.[/]\n")
+        console.print("\n[dim]DNS is already on Automatic. Nothing to do.[/]\n")
         return
 
     provider_name = service.active_provider.name if service.active_provider else "custom DNS"
 
     with Live(
-        Spinner("dots", text=f"  Reverting from [yellow]{provider_name}[/] to DHCP…"),
+        Spinner("dots", text=f"  Reverting from [yellow]{provider_name}[/] to Automatic…"),
         console=console,
         refresh_per_second=12,
     ):
@@ -182,7 +182,7 @@ def cmd_reset(service: DNSService) -> None:
             console.print(f"\n[bold red]✗ Error:[/] {e}\n")
             sys.exit(1)
 
-    console.print("\n[bold green]✔[/] DNS reverted to [bold]Automatic (DHCP)[/]\n")
+    console.print("\n[bold green]✔[/] DNS reverted to [bold]Automatic[/]\n")
 
 
 def cmd_interactive(service: DNSService) -> None:
@@ -241,13 +241,13 @@ def cmd_interactive(service: DNSService) -> None:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="dns-changer",
-        description="DNS Changer CLI — manage DNS settings on Windows",
+        description="DNS Changer CLI — manage DNS settings on your system",
     )
     sub = parser.add_subparsers(dest="command")
 
     sub.add_parser("list", help="List all available DNS providers")
     sub.add_parser("status", help="Show current DNS status")
-    sub.add_parser("reset", help="Revert DNS to Automatic (DHCP)")
+    sub.add_parser("reset", help="Revert DNS to Automatic")
 
     p_set = sub.add_parser("set", help="Activate a DNS provider")
     p_set.add_argument("provider", help="Provider name or key (e.g. Shecan, Electro)")

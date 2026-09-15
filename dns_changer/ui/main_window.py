@@ -283,7 +283,7 @@ class MainWindow:
             servers = self._s.current_dns()
         except Exception:
             servers = []
-        dns_text = ", ".join(servers) if servers else "Automatic (DHCP)"
+        dns_text = ", ".join(servers) if servers else "Automatic"
         self._dns_lbl.config(text=f"Current DNS:  {dns_text}")
 
         if self._s.is_active:

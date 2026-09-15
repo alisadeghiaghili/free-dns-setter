@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name            = "dns-changer"
 version         = "2.1.0"
-description     = "Windows DNS manager for Iranian users — one-click DNS switching (GUI + CLI) with verified anti-sanction, anti-filter, gaming, and general resolvers"
+description     = "Cross-platform DNS manager for Iranian users — one-click DNS switching (GUI + CLI) on Windows, Linux (Ubuntu/Debian), and macOS, with verified anti-sanction, anti-filter, gaming, and general resolvers"
 readme          = "README.md"
 license         = { text = "Apache-2.0" }
 requires-python = ">=3.11"
@@ -17,15 +17,17 @@ authors = [
 
 keywords = [
   "dns", "iran", "anti-sanction", "anti-filter",
-  "shecan", "begzar", "network", "windows",
+  "shecan", "begzar", "network", "cross-platform",
+  "windows", "linux", "ubuntu", "macos",
 ]
 
 classifiers = [
   "Development Status :: 5 - Production/Stable",
-  "Environment :: Win32 (MS Windows)",
   "Intended Audience :: End Users/Desktop",
   "License :: OSI Approved :: Apache Software License",
   "Operating System :: Microsoft :: Windows",
+  "Operating System :: POSIX :: Linux",
+  "Operating System :: MacOS",
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
@@ -34,7 +36,9 @@ classifiers = [
 ]
 
 dependencies = [
-  "WMI>=1.5",
+  # WMI is Windows-only; the Linux (nmcli) and macOS (networksetup) backends
+  # rely on OS-bundled tools, so only this import is platform-gated.
+  "WMI>=1.5; sys_platform == \"win32\"",
   "rich>=13.0",
 ]
 

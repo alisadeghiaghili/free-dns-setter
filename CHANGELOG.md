@@ -6,6 +6,32 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [Unreleased]
+
+### Added
+- **Linux (Ubuntu/Debian) support** — DNS managed through NetworkManager
+  (`nmcli`): read from the active connection, set via `ipv4.dns`/`ipv4.method`.
+- **macOS support** — DNS managed through the system `networksetup` tool
+  (set/empty DNS per hardware service; read via `scutil --dns`).
+- **`sudo` elevation on Linux & macOS** — mirrors the Windows UAC auto-relaunch.
+  `WMI` is now a Windows-only dependency; `rich` stays cross-platform.
+
+### Changed
+- **`core/adapter.py`** — now a per-OS backend (WMI / `nmcli` / `networksetup`);
+  `wmi` is imported lazily so the module loads on non-Windows systems.
+- **`utils/privileges.py`** — platform-aware elevation (UAC vs `sudo`); the
+  Linux/macOS relaunch preserves `python -m` package context.
+- **Docs** — README (FA/EN) install & troubleshooting updated for all three
+  OSes; wording de-Windows-ified ("Automatic" instead of "DHCP").
+
+### Fixed
+- **Windows adapter detection** — was matching the adapter by a
+  `"Wireless"`/`"Ethernet"` keyword in the description, which missed real
+  hardware (e.g. "Realtek PCIe GbE"). Now targets the adapter holding the
+  default gateway, with a fallback to the first IP-enabled adapter.
+
+---
+
 ## [2.1.0] — 2026-09-14
 
 ### Added
